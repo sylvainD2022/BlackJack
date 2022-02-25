@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Blacky</title>
+<link href="style_jack.css" rel="stylesheet" type="text/css" >
+<meta charset="utf-8">
+<script>
+function randomInt(max)
+{
+return Math.floor(Math.random() * Math.floor(max));
+}
+var tabBank = new Array();
+var tabPlayer = new Array();
+var end = false;
+var nbJeuxDeCarte = 1;
+var nbPerdu=0;
+var nbGagne=0;
+                        ////Maria
+function afficherTabCartes()
+{
+document.getElementById("bank").innerHTML = "";
+document.getElementById("player").innerHTML = "";
+
+for(var i=0; i<tabBank.length; i++)
+{
+document.getElementById("bank").innerHTML += "<td><img  src='./images/"+tabBank[i]+".jpg'></td>";
+}
+document.getElementById("bank").innerHTML +='<td><img id="photo"  src="./images/verso.jpg"></td>';//ajout carte cachée personnelle(sylvain)
+document.getElementById("bank").innerHTML += "<td class='score'>"+compteScore(tabBank)+"</td>";
+
+for(var i=0; i<tabPlayer.length; i++)
+{
+document.getElementById("player").innerHTML += "<td><img  src='./images/"+tabPlayer[i]+".jpg'></td>";
+}
+document.getElementById("player").innerHTML += "<td class='score'>"+compteScore(tabPlayer)+"</td>";
+
+
+
+}
+
+                        ////Sylvain
+                function finPartie(text)
+{
+document.getElementById('menu').innerHTML='<div><td id="victoire" >'+text+"</td></div>";
+document.getElementById('menu').innerHTML+='<td><input id="texto"type="submit" value="rejouer" onclick="setStart();"></td>';
+}
+function compteScore(tab)
+{
+	var somme=0;
+	var as=0;
+	for(var i=0;i<tab.length;i++)
+	{
+		var valeur=tab[i]%13
+		if((valeur>=11)||(valeur==0))        //valet dame roi
+		{
+			valeur=10;
+		}
+		if(valeur==1)   //as
+		{
+			valeur=11;
+			as++;
+		}
+		somme+=valeur;
+	}
+	while(as>0&&somme>21)
+	{
+		somme-=10;
+		as--;
+	}
+	return somme;
+}
+
+function compareScore()
+{
+	if(compteScore(tabPlayer)>21 || compteScore(tabBank) == 21) //perdu
+	{
+		finPartie('perdu');
+		nbPerdu++;
+		return 0;
+	}
+
+	if(compteScore(tabPlayer)==21 || compteScore(tabBank)>21)    //gagné
+	{
+		if(compteScore(tabPlayer)==21)// si BJ
+		{
+			finPartie('BlackJack !');
+		}
+		else//autres victoires
+		{
+			finPartie('victoire');
+		}
+		nbGagne++;
+		return 0;
+	}
+	if(end)  //le joueur reste
+	{
+		if(compteScore(tabPlayer)>=compteScore(tabBank)) //gagné
+		{
+			finPartie('victoire');
+			nbGagne++;
+		}
+		else //perdu
+		{
+			finPartie('perdu');
+			nbPerdu++;
+		}
+	}
+}
+
+function drawACard(tab)
+{
+//tab[tab.length] = randomInt(51)+1;
+
+/* version Maria
+
+var test=false;
+var tmp;
+
+do
+{
+test=false;
+tmp= randomInt(51)+1;
+
+for(var i=0; i<tabBank.length;i++)
+{
+if(tmp==tabBank[i])
+{
+test=true;
+}
+}
+for(var i=0; i<tabPlayer.length;i++)
+{
+if(tmp==tabPlayer[i])
+{
+test=true;
+}
+}
+}
+while(test);
+
+tab[tab.length]=tmp;
+
+*//////
+// version Sylain
+var flag=0;
+var temp;
+
+do
+{
+	flag=0;
+	temp=randomInt(51)+1;
+	for(var i=0;i<tabBank.length;i++)
+	{
+		if(temp==tabBank[i])  //bank?
+		{
+
+			flag++;
+
+		}
+	}
+	for(var i=0;i<tabPlayer.length;i++)
+		{
+			if(temp==tabPlayer[i])  //player?
+			{
+				flag++;
+			}
+		}
+
+}while(flag>=nbJeuxDeCarte);
+tab[tab.length]=temp;
+
+}
+
+                        ////Anthony
+
+                        //fonction des boutons
+function carte()
+{
+	drawACard(tabPlayer);
+	afficherTabCartes();
+	compareScore();
+}
+
+function reste()
+{
+	end = true;
+	while(compteScore(tabBank) < 17 && compteScore(tabBank) < compteScore(tabPlayer))
+	{
+		drawACard(tabBank);
+	}
+	afficherTabCartes();
+	compareScore();
+}
+
+function setMenu()
+{
+document.getElementById('menu').innerHTML = "<td><input type='submit' value='carte' onclick='carte();'></td>";
+document.getElementById('menu').innerHTML += "<td><input type='submit' value='reste' onclick='reste();'></td>";
+}
+
+                        //fonction de setup de depart
+
+function setStart()
+{
+document.getElementById('affich').innerHTML="<td>nombre de partie gagnees : "+nbGagne+"<br>nombre de partie perdues : "+nbPerdu+"</td>";
+tabPlayer = new Array();
+tabBank = new Array();
+
+drawACard(tabPlayer);
+drawACard(tabPlayer);
+
+drawACard(tabBank);
+
+end = false;
+
+setMenu();
+afficherTabCartes();
+compareScore();
+
+
+}
+
+		</script>
+	</head>
+	<body>
+		<br><br><br><br>
+		<table id="banque" border="0" align="center">
+			<tr id="bank">
+			</tr>
+		</table>
+			<br>
+			<table id="joueur" border="0" align="center">
+			<tr id="player">
+			</tr>
+		</table>
+		<br>
+		<table border="0" align="center">
+			<tr id='menu'>
+			</tr>
+			<tr id='affich'>
+			</tr>
+		</table>
+		<script>
+			setStart();
+		</script>
+	</body>
+</html>

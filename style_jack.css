@@ -1,0 +1,36 @@
+
+body 
+{
+	background-image: url("images/Tapis_jeu_cartes.jpg");
+	background-size:100%;
+}
+#banque 
+{
+		marging-top:30 px;
+}
+#affich
+{
+		font-size: 1.7em;
+		color:#c3aed6;
+}
+input 
+{	
+background-color:rgba(0,0,0,0);
+	background-image:url("images/boutton.gif");
+	background-size:contain;
+	width: 120px;
+	height:120px;
+	color:white;
+	font-size:140%;
+	border:0px;
+}
+#texto {
+	
+	font-size:150%;
+	
+}
+#victoire,.score {
+		font-size:3em;
+		color:#c3aed6;
+}
+
